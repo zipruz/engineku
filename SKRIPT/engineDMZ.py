@@ -8,7 +8,7 @@ import os
 
 serverdb='localhost'
 userdb='root'
-passworddb=''
+passworddb='123321'
 db='ci_base'
 table='box_pat'
 
