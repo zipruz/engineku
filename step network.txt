@@ -1,0 +1,73 @@
+# ADD IP ADDRESS
+ifconfig eth0 10.100.112.1 netmask 255.255.255.0
+
+### CLEAR IP
+ifconfig en1 0.0.0.0
+
+#DEFAULT GW
+route add default gw 10.100.112.1
+
+##CHANGE DNS SERVER
+rm -rf /etc/resolv.conf
+echo "nameserver 8.8.8.8" >> /etc/resolv.conf
+echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+
+
+
+
+### BRIDGING
+modinfo bridge   ##CEK MODUL
+modprobe --first-time bridge   ###JIKA TDK AKTIF BISA DI LOAD DAHULU
+yum install bridge-utils -y
+
+vi /etc/sysconfig/network-scripts/ifcfg-dmz0
+DEVICE="dmz0"
+BOOTPROTO="static"
+ONBOOT="yes"
+TYPE="Bridge"
+NM_CONTROLLED="no"
+
+
+KEMUDIAN DIARAHKAN INTERFACE KE BRIDGE TSB
+vi /etc/sysconfig/network-scripts/ifcfg-eth2
+DEVICE=eth2
+TYPE=Ethernet
+BOOTPROTO=none
+ONBOOT=yes
+NM_CONTROLLED=no
+BRIDGE=dmz0
+
+
+
+########## NAT DI LINUX ###############
+echo "1" > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+
+PAT
+#####
+iptables -t nat -A PREROUTING -p tcp --dport 22 -j DNAT --to 10.100.112.254:22
+iptables -A FORWARD -p tcp --dport 22 -d 10.100.112.254 -j ACCEPT
+
+
+
+
+
+
+
+#MIGRASI CI NYO
+install php-json php-mysqlnd php-xml php-intl 
+
+chcon -t httpd_sys_rw_content_t write -R
+
+
+AKTIFKAN MODULE REWRITE
+==================================================
+LoadModule rewrite_module modules/mod_rewrite.so
+
+<Directory /var/www/html>
+ AllowOverride All
+</Directory>
+
+
+
