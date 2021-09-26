@@ -76,8 +76,6 @@ while 1:
 		action="ACCEPT"
 		sintak=''
 
-		# iptables -t nat -A PREROUTING -p tcp  -s 192.168.122.202 --dport 80 -j DNAT --to 10.100.112.254:8080
-		# iptables -t nat -A PREROUTING -p tcp --dport 22 -j DNAT --to 10.100.112.254:22
 		iptables=""
 
 		if protokol==1:
